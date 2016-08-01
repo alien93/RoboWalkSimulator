@@ -10,6 +10,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with RoboWalk.  If not, see <http://www.gnu.org/licenses/>*/
+using RoboWalk.simulator;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,25 +25,25 @@ using Tao.Platform.Windows;
 
 namespace RoboWalk
 {
-    public partial class Form1 : Form
+    public partial class SimulatorForm : Form
     {
-        public Form1()
+        private RobotSimulator rs = null;
+
+        public SimulatorForm()
         {
             InitializeComponent();
-            simpleOpenGlControl1.InitializeContexts();
+            robotSimulator.InitializeContexts();
+            rs = new RobotSimulator(robotSimulator.Width, robotSimulator.Height);
         }
 
-        private void simpleOpenGlControl1_Paint(object sender, PaintEventArgs e)
+        private void robotSimulator_Paint(object sender, PaintEventArgs e)
         {
-            Gl.glClear(Gl.GL_COLOR_BUFFER_BIT);
-            Gl.glBegin(Gl.GL_TRIANGLES);
-            Gl.glColor3f(1.0f, 0.0f, 0.0f);
-            Gl.glVertex2d(0.0, 0.0);
-            Gl.glColor3f(0.0f, 1.0f, 0.0f);
-            Gl.glVertex2d(1.0, 0.0);
-            Gl.glColor3f(0.0f, 0.0f, 1.0f);
-            Gl.glVertex2d(0.5, 0.867);
-            Gl.glEnd();
+            rs.draw();
+        }
+
+        private void robotSimulator_Resize(object sender, EventArgs e)
+        {
+            rs.resize(robotSimulator.Width, robotSimulator.Height);
         }
     }
 }
