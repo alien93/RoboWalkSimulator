@@ -1,4 +1,6 @@
-﻿/*Copyright (c) 2016  Nina Marjanovic
+﻿extensions: designer.cs
+extensions: .cs
+/*Copyright (c) 2016  Nina Marjanovic
 This file is part of RoboWalk.
 RoboWalk is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -10,22 +12,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with RoboWalk.  If not, see <http://www.gnu.org/licenses/>*/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RoboWalk.model
-{
-    class Geometry
-    {
-        private AbstractObject abstractObject { get; set; }
-
-        public Geometry() { }
-        public Geometry(AbstractObject ao)
-        {
-            this.abstractObject = ao;
-        }
-    }
-}
+extensions: .aspx .ascx
+<%-- 
+Sample license text.
+--%>
+extensions: .vb
+'Sample license text. 
+extensions: .xml .htm
+<!-- Test license -->
+extensions: .js
+// Test license
