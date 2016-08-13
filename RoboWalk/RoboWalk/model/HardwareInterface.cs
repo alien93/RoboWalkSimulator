@@ -20,10 +20,10 @@ namespace RoboWalk.model
 {
     class HardwareInterface
     {
-        private String hardwareInterface { get; set; }
+        private string hardwareInterface { get; set; }
 
         public HardwareInterface() { }
-        public HardwareInterface(String hardwareInterface)
+        public HardwareInterface(string hardwareInterface)
         {
             this.hardwareInterface = hardwareInterface;
         }

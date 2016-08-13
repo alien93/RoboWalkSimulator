@@ -20,7 +20,7 @@ namespace RoboWalk.model
 {
     class Sensor
     {
-        private String name { get; set; }
+        private string name { get; set; }
         private float updateRate { get; set; } //Hz
         private Parent parent { get; set; }
         private Origin origin { get; set; }
@@ -28,7 +28,7 @@ namespace RoboWalk.model
         private Ray ray { get; set; }
 
         public Sensor() { }
-        public Sensor(String name, float updateRate,
+        public Sensor(string name, float updateRate,
                       Parent parent, Origin origin,
                       Camera camera, Ray ray)
         {

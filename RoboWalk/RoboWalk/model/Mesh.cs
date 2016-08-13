@@ -20,11 +20,11 @@ namespace RoboWalk.model
 {
     class Mesh
     {
-        private String filePath { get; set; }
+        private string filePath { get; set; }
         private double scale { get; set; }
 
         public Mesh() { }
-        public Mesh(String filePath, double scale)
+        public Mesh(string filePath, double scale)
         {
             this.filePath = filePath;
             this.scale = scale;

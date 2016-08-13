@@ -20,13 +20,13 @@ namespace RoboWalk.model
 {
     class Transmission
     {
-        private String name { get; set; }
+        private string name { get; set; }
         private TransmissionType type { get; set; }
         private ArrayList joint { get; set; }
         private ArrayList actuator { get; set; }
 
         public Transmission() { }
-        public Transmission(String name, TransmissionType type,
+        public Transmission(string name, TransmissionType type,
                             ArrayList joint, ArrayList actuator)
         {
             this.name = name;

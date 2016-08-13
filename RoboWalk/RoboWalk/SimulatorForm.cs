@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Tao.OpenGl;
 using Tao.Platform.Windows;
+using RoboWalk.urdf;
 
 namespace RoboWalk
 {
@@ -34,6 +35,10 @@ namespace RoboWalk
             InitializeComponent();
             robotSimulator.InitializeContexts();
             rs = new RobotSimulator(robotSimulator.Width, robotSimulator.Height);
+            URDFparser parser = URDFparser.getInstance();
+            Console.WriteLine("starting...");
+            parser.parseURDF("D:/urdf/biped.urdf");
+            Console.WriteLine("done...");
         }
 
         private void robotSimulator_Paint(object sender, PaintEventArgs e)

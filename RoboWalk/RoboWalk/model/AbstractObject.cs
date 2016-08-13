@@ -20,7 +20,7 @@ namespace RoboWalk.model
 {
     class AbstractObject
     {
-        protected String name { get; set; }
+        protected string name { get; set; }
         protected double height { get; set; }
         protected double width { get; set; }
         protected double depth { get; set; }

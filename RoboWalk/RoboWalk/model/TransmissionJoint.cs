@@ -20,11 +20,11 @@ namespace RoboWalk.model
 {
     class TransmissionJoint
     {
-        private String name { get; set; }
+        private string name { get; set; }
         private ArrayList hardwareInterface { get; set; }
 
         public TransmissionJoint() { }
-        public TransmissionJoint(String name, ArrayList hardwareInterface)
+        public TransmissionJoint(string name, ArrayList hardwareInterface)
         {
             this.name = name;
             this.hardwareInterface = hardwareInterface;

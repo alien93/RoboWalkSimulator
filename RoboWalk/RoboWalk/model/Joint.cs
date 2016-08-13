@@ -21,7 +21,7 @@ namespace RoboWalk.model
     enum Types { revolute, continuous, prismatic, fixeed, floating, planar};
     class Joint
     {
-        private String name { get; set; } //name of the joint
+        private string name { get; set; } //name of the joint
         private Types type { get; set; }
         private Origin origin { get; set; }
         private Parent parent { get; set; }
@@ -34,7 +34,7 @@ namespace RoboWalk.model
         private SafetyController safetyController { get; set; }
 
         public Joint() { }
-        public Joint(String name, Types type, Origin origin, Parent parent, Child child,
+        public Joint(string name, Types type, Origin origin, Parent parent, Child child,
                      Axis axis, Calibration calibration, Dynamics dynamics, Limit limit,
                      Mimic mimic, SafetyController safetyController)
         {

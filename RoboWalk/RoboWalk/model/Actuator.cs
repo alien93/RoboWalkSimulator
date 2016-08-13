@@ -20,11 +20,11 @@ namespace RoboWalk.model
 {
     class Actuator
     {
-        private String name { get; set; }
+        private string name { get; set; }
         private ArrayList mechanicalReduction { get; set; }
 
         public Actuator() { }
-        public Actuator(String name, ArrayList mechanicalReduction)
+        public Actuator(string name, ArrayList mechanicalReduction)
         {
             this.name = name;
             this.mechanicalReduction = mechanicalReduction;

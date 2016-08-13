@@ -20,10 +20,10 @@ namespace RoboWalk.model
 {
     class TransmissionType
     {
-        private String type { get; set; }
+        private string type { get; set; }
 
         public TransmissionType() { }
-        public TransmissionType(String type)
+        public TransmissionType(string type)
         {
             this.type = type;
         }

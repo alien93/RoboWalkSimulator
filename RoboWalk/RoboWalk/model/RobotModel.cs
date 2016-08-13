@@ -20,14 +20,14 @@ namespace RoboWalk.model
 {
     class RobotModel
     {
-        private String name { get; set; }
+        public string name { get; set; }
         private DictionaryBase joints;
         private DictionaryBase links;
         private ArrayList jointsVector { get; set; }
         private ArrayList linksVector { get; set; }
 
         public RobotModel() { }
-        public RobotModel(String name, DictionaryBase joints, DictionaryBase links,
+        public RobotModel(string name, DictionaryBase joints, DictionaryBase links,
                           ArrayList jointsVector, ArrayList linksVector)
         {
             this.name = name;

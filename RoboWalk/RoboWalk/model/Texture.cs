@@ -20,10 +20,10 @@ namespace RoboWalk.model
 {
     class Texture
     {
-        private String filePath { get; set; }
+        private string filePath { get; set; }
 
         public Texture() { }
-        public Texture(String filePath)
+        public Texture(string filePath)
         {
             this.filePath = filePath;
         }
