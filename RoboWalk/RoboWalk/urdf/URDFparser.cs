@@ -68,6 +68,15 @@ namespace RoboWalk.urdf
         public void parseChildNodes(XmlNode root, int i)
         {
             XmlNode node = root.ChildNodes[i];
+            Origin origin = null;
+            Parent parent = null;
+            Child child = null;
+            Axis axis = null;
+            Calibration calibration = null;
+            Dynamics dynamics = null;
+            Limit limit = null;
+            Mimic mimic = null;
+            SafetyController safetyController = null;
 
             if (node.Name.Equals("joint"))
             {
@@ -139,21 +148,21 @@ namespace RoboWalk.urdf
                                     p = 0;
                                     yy = 0;
                                 }
-                                Origin origin = new Origin(x, y, z, r, p, yy);
+                                origin = new Origin(x, y, z, r, p, yy);
                                 break;
                             }
                         case "parent":
                             {
                                 XmlNode parentNode = node.ChildNodes[j];
                                 String linkName = parentNode.Attributes["link"] != null ? parentNode.Attributes["link"].Value : "";
-                                Parent parent = new Parent(linkName);
+                                parent = new Parent(linkName);
                                 break;
                             }
                         case "child":
                             {
                                 XmlNode childNode = node.ChildNodes[j];
                                 String childName = childNode.Attributes["link"] != null ? childNode.Attributes["link"].Value : "";
-                                Child child = new Child(childName);
+                                child = new Child(childName);
                                 break;
                             }
                         case "axis":
@@ -187,7 +196,7 @@ namespace RoboWalk.urdf
                                     p1 = 0;
                                     yy1 = 0;
                                 }
-                                Axis axis = new Axis(x1, y1, z1, r1, p1, yy1);
+                                axis = new Axis(x1, y1, z1, r1, p1, yy1);
                                 break;
                             }
                         case "calibration":
@@ -195,7 +204,7 @@ namespace RoboWalk.urdf
                                 XmlNode calibrationNode = node.ChildNodes[j];
                                 string rising = calibrationNode.Attributes["rising"] != null ? calibrationNode.Attributes["rising"].Value : "";
                                 string falling = calibrationNode.Attributes["falling"] != null ? calibrationNode.Attributes["falling"].Value : "";
-                                Calibration calibration = new Calibration(Convert.ToDouble(rising), Convert.ToDouble(falling));
+                                calibration = new Calibration(Convert.ToDouble(rising), Convert.ToDouble(falling));
                                 break;
                             }
                         case "dynamics":
@@ -203,7 +212,7 @@ namespace RoboWalk.urdf
                                 XmlNode dynamicsNode = node.ChildNodes[j];
                                 string damping = dynamicsNode.Attributes["damping"] != null ? dynamicsNode.Attributes["damping"].Value : "";
                                 string friction = dynamicsNode.Attributes["friction"] != null ? dynamicsNode.Attributes["friction"].Value : "";
-                                Dynamics dynamics = new Dynamics(Convert.ToDouble(damping), Convert.ToDouble(friction));
+                                dynamics = new Dynamics(Convert.ToDouble(damping), Convert.ToDouble(friction));
                                 break;
                             }
                         case "limit":
@@ -213,7 +222,7 @@ namespace RoboWalk.urdf
                                 string upper = limitNode.Attributes["upper"] != null ? limitNode.Attributes["upper"].Value : "";
                                 string effort = limitNode.Attributes["effort"] != null ? limitNode.Attributes["effort"].Value : "";
                                 string velocity = limitNode.Attributes["velocity"] != null ? limitNode.Attributes["velocity"].Value : "";
-                                Limit limit = new Limit(Convert.ToDouble(lower), Convert.ToDouble(upper), Convert.ToDouble(effort), Convert.ToDouble(velocity));
+                                limit = new Limit(Convert.ToDouble(lower), Convert.ToDouble(upper), Convert.ToDouble(effort), Convert.ToDouble(velocity));
                                 break;
                             }
                         case "mimic":
@@ -224,7 +233,7 @@ namespace RoboWalk.urdf
                                 string offset = mimicNode.Attributes["offset"] != null ? mimicNode.Attributes["offset"].Value : "";
                                 if (multiplier == "") multiplier = "1";
                                 if (offset == "") offset = "0";
-                                Mimic mimic = new Mimic(jointMimic, Convert.ToDouble(multiplier), Convert.ToDouble(offset));
+                                mimic = new Mimic(jointMimic, Convert.ToDouble(multiplier), Convert.ToDouble(offset));
                                 break;
                             }
                         case "safety_controller":
@@ -238,7 +247,7 @@ namespace RoboWalk.urdf
                                 if (soft_upper_limit == "") soft_upper_limit = "0";
                                 if (k_position == "") k_position = "0";
                                 if (k_velocity == "") k_velocity = "0";
-                                SafetyController safetyController = new SafetyController(Convert.ToDouble(soft_lower_limit),
+                                safetyController = new SafetyController(Convert.ToDouble(soft_lower_limit),
                                                                                          Convert.ToDouble(soft_upper_limit),
                                                                                          Convert.ToDouble(k_position),
                                                                                          Convert.ToDouble(k_velocity));
@@ -250,8 +259,120 @@ namespace RoboWalk.urdf
                             }
                     }
                 }
+                Joint joint = new Joint(name, type, origin, parent, child,
+                                                    axis, calibration, dynamics, limit,
+                                                    mimic, safetyController);
+                rm.addJoint(joint);
             }
+            else if(node.Name.Equals("link"))
+            {
+                //link name
+                String name = node.Attributes["name"] != null ? node.Attributes["name"].Value : "noName link";
+
+                //inertial
+                Inertial inertial = null;
+                for (int j = 0; j < node.ChildNodes.Count; j++)
+                {
+                    switch (node.ChildNodes[j].Name.ToString())
+                    {
+                        case "inertial":
+                            {
+                                XmlNode inertialNode = node.ChildNodes[j];
+                                for(int k = 0; k<inertialNode.ChildNodes.Count; k++)
+                                {
+                                    addInertialElementChildren(k, inertialNode, inertial);
+                                }
+                                break;
+                            }
+                        default:
+                            {
+                                break;
+                            }
+                    }
+                }
+             }
         }
 
+        private void addInertialElementChildren(int k, XmlNode inertialNode, Inertial inertial)
+        {
+            if(inertialNode.ChildNodes[k].Name.Equals("origin"))
+            {
+                for(int i=0; i<inertialNode.ChildNodes.Count; i++)
+                {
+                    switch (inertialNode.ChildNodes[i].Name.ToString())
+                    {
+                        case "origin":
+                            {
+                                XmlNode originNode = inertialNode.ChildNodes[i];
+                                String rpy = originNode.Attributes["rpy"] != null ? originNode.Attributes["rpy"].Value : "";
+                                String xyz = originNode.Attributes["xyz"] != null ? originNode.Attributes["xyz"].Value : "";
+                                double x, y, z, r, p, yy;
+                                if(xyz != "")
+                                {
+                                    string[] xyz_data = xyz.Split(' ');
+                                    x = Convert.ToDouble(xyz_data[0]);
+                                    y = Convert.ToDouble(xyz_data[1]);
+                                    z = Convert.ToDouble(xyz_data[2]);
+                                }
+                                else
+                                {
+                                    x = 0; y = 0; z = 0;
+                                }
+                                if(rpy != "")
+                                {
+                                    string[] rpy_data = rpy.Split(' ');
+                                    r = Convert.ToDouble(rpy_data[0]);
+                                    p = Convert.ToDouble(rpy_data[1]);
+                                    yy = Convert.ToDouble(rpy_data[2]);
+                                }
+                                else
+                                {
+                                    r = 0; p = 0; yy = 0;
+                                }
+                                Origin origin = new Origin(x, y, z, r, p, yy);
+                                inertial.origin = origin;
+
+                                break;
+                            }
+                        case "mass":
+                            {
+                                XmlNode massNode = inertialNode.ChildNodes[i];
+                                string massVal = massNode.Attributes["value"] != null ? massNode.Attributes["value"].Value : "";
+                                Mass mass = new Mass(Convert.ToDouble(massVal));
+                                inertial.mass = mass;
+                                break;
+                            }
+                        case "inertia":
+                            {
+                                XmlNode inertiaNode = inertialNode.ChildNodes[i];
+                                string ixx = inertiaNode.Attributes["ixx"].Value;
+                                string ixy = inertiaNode.Attributes["ixy"].Value;
+                                string ixz = inertiaNode.Attributes["ixz"].Value;
+                                string iyy = inertiaNode.Attributes["iyy"].Value;
+                                string iyz = inertiaNode.Attributes["iyz"].Value;
+                                string izz = inertiaNode.Attributes["izz"].Value;
+                                if (ixx.Equals("")) ixx = "0";
+                                if (ixy.Equals("")) ixy = "0";
+                                if (ixz.Equals("")) ixz = "0";
+                                if (iyy.Equals("")) iyy = "0";
+                                if (iyz.Equals("")) iyz = "0";
+                                if (izz.Equals("")) izz = "0";
+                                Inertia inertia = new Inertia(Convert.ToDouble(ixx),
+                                                              Convert.ToDouble(ixy),
+                                                              Convert.ToDouble(ixz),
+                                                              Convert.ToDouble(iyy),
+                                                              Convert.ToDouble(iyz),
+                                                              Convert.ToDouble(izz));
+                                inertial.inertia = inertia;
+                                break;
+                            }
+                        default:
+                            {
+                                break;
+                            }
+                    }
+                }
+            }
+        }
     }
 }

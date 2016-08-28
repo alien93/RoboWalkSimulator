@@ -21,8 +21,8 @@ namespace RoboWalk.model
     class RobotModel
     {
         public string name { get; set; }
-        private DictionaryBase joints;
-        private DictionaryBase links;
+        private IDictionary joints;
+        private IDictionary links;
         private ArrayList jointsVector { get; set; }
         private ArrayList linksVector { get; set; }
 
@@ -35,6 +35,12 @@ namespace RoboWalk.model
             this.links = links;
             this.jointsVector = jointsVector;
             this.linksVector = linksVector;
+        }
+
+        internal void addJoint(Joint joint)
+        {
+            joints[joint.name] = joint;
+            jointsVector.Insert(jointsVector.Count, joint);
         }
     }
 }

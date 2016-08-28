@@ -20,9 +20,9 @@ namespace RoboWalk.model
 {
     class Inertial
     {
-        private Origin origin { get; set; }
-        private Mass mass { get; set; }
-        private Inertia inertia { get; set; }
+        public Origin origin { get; set; }
+        public Mass mass { get; set; }
+        public Inertia inertia { get; set; }
 
         public Inertial() { }
         public Inertial(Origin origin, Mass mass, Inertia inertia)

@@ -21,7 +21,7 @@ namespace RoboWalk.model
     enum Types { revolute, continuous, prismatic, fixeed, floating, planar};
     class Joint
     {
-        private string name { get; set; } //name of the joint
+        public string name { get; set; } //name of the joint
         private Types type { get; set; }
         private Origin origin { get; set; }
         private Parent parent { get; set; }
