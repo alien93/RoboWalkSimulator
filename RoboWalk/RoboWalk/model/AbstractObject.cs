@@ -20,7 +20,7 @@ namespace RoboWalk.model
 {
     class AbstractObject
     {
-        protected string name { get; set; }
+        public string name { get; set; }
         protected double height { get; set; }
         protected double width { get; set; }
         protected double depth { get; set; }
@@ -39,9 +39,6 @@ namespace RoboWalk.model
             radius = ao.radius;
             length = ao.length;
             sphereRadius = ao.sphereRadius;
-        }
-
-        ~AbstractObject() { }
-        
+        }        
     }
 }

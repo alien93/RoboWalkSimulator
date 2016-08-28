@@ -20,9 +20,9 @@ namespace RoboWalk.model
 {
     class Box:AbstractObject
     {
-        Box() { }
-        Box(AbstractObject ao) : base(ao) { }
-        Box(double height, double width, double depth)
+        public Box() { }
+        public Box(AbstractObject ao) : base(ao) { }
+        public Box(double height, double width, double depth)
         {
             this.height = height;
             this.depth = depth;

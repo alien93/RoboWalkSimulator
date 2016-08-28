@@ -12,6 +12,7 @@ You should have received a copy of the GNU General Public License
 along with RoboWalk.  If not, see <http://www.gnu.org/licenses/>*/
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +27,12 @@ namespace RoboWalk.model
         private ArrayList jointsVector { get; set; }
         private ArrayList linksVector { get; set; }
 
-        public RobotModel() { }
+        public RobotModel() {
+            this.links = new Dictionary<string, Link>();
+            this.joints = new Dictionary<string, Joint>();
+            this.linksVector = new ArrayList();
+            this.jointsVector = new ArrayList();
+        }
         public RobotModel(string name, DictionaryBase joints, DictionaryBase links,
                           ArrayList jointsVector, ArrayList linksVector)
         {
@@ -39,8 +45,14 @@ namespace RoboWalk.model
 
         internal void addJoint(Joint joint)
         {
-            joints[joint.name] = joint;
+            joints.Add(joint.name, joint);
             jointsVector.Insert(jointsVector.Count, joint);
+        }
+
+        internal void addLink(Link link)
+        {
+            links.Add(link.name, link);
+            linksVector.Insert(linksVector.Count, link);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace RoboWalk.model
 {
     class Link
     {
-        private string name { get; set; }
+        public string name { get; set; }
         private Inertial inertial { get; set; }
         private ArrayList visual { get; set; }
         private Collision collision { get; set; }
