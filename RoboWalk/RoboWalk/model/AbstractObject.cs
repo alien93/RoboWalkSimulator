@@ -21,12 +21,12 @@ namespace RoboWalk.model
     class AbstractObject
     {
         public string name { get; set; }
-        protected double height { get; set; }
-        protected double width { get; set; }
-        protected double depth { get; set; }
-        protected double radius { get; set; }
-        protected double length { get; set; }
-        protected double sphereRadius { get; set; }
+        public double height { get; set; }
+        public double width { get; set; }
+        public double depth { get; set; }
+        public double radius { get; set; }
+        public double length { get; set; }
+        public double sphereRadius { get; set; }
 
         public AbstractObject() { }
 

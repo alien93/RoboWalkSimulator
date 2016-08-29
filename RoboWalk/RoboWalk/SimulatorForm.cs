@@ -50,5 +50,53 @@ namespace RoboWalk
         {
             rs.resize(robotSimulator.Width, robotSimulator.Height);
         }
+
+        private void SimulatorForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            float xRotation = rs.XRotation;
+            float yRotation = rs.YRotation;
+            float sceneDistance = rs.SceneDistance;
+
+            switch (e.KeyCode)
+            {
+                case Keys.S:
+                    {
+                        xRotation -= 5.0f;
+                        rs.XRotation = xRotation;
+                        break;
+                    }
+                case Keys.W:
+                    {
+                        xRotation += 5.0f;
+                        rs.XRotation = xRotation;
+                        break;
+                    }
+                case Keys.D:
+                    {
+                        yRotation -= 5.0f;
+                        rs.YRotation = yRotation;
+                        break;
+                    }
+                case Keys.A:
+                    {
+                        yRotation += 5.0f;
+                        rs.YRotation = yRotation;
+                        break;
+                    }
+                case Keys.Add:
+                    {
+                        sceneDistance += 10.0f;
+                        rs.SceneDistance = sceneDistance;
+                        break;
+                    }
+                case Keys.Subtract:
+                    {
+                        sceneDistance -= 10.0f;
+                        rs.SceneDistance = sceneDistance;
+                        break;
+                    }
+            }
+            robotSimulator.Refresh();
+        }
     }
 }

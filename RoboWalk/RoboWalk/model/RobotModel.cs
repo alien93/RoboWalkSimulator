@@ -22,19 +22,19 @@ namespace RoboWalk.model
     class RobotModel
     {
         public string name { get; set; }
-        private IDictionary joints;
-        private IDictionary links;
-        private ArrayList jointsVector { get; set; }
-        private ArrayList linksVector { get; set; }
+        public IDictionary<string, Joint> joints { get; private set; }
+        public IDictionary<string, Link> links { get; private set; }
+        public List<Joint> jointsVector { get; private set; }
+        public List<Link> linksVector { get; private set; }
 
         public RobotModel() {
             this.links = new Dictionary<string, Link>();
             this.joints = new Dictionary<string, Joint>();
-            this.linksVector = new ArrayList();
-            this.jointsVector = new ArrayList();
+            this.linksVector = new List<Link>();
+            this.jointsVector = new List<Joint>();
         }
-        public RobotModel(string name, DictionaryBase joints, DictionaryBase links,
-                          ArrayList jointsVector, ArrayList linksVector)
+        public RobotModel(string name, IDictionary<string, Joint> joints, IDictionary<string, Link> links,
+                          List<Joint> jointsVector, List<Link> linksVector)
         {
             this.name = name;
             this.joints = joints;

@@ -20,7 +20,7 @@ namespace RoboWalk.model
 {
     class Child
     {
-        private string link { get; set; }
+        public string link { get; private set; }
 
         public Child() { }
         public Child(string link)

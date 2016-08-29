@@ -58,8 +58,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(703, 306);
             this.Controls.Add(this.robotSimulator);
+            this.KeyPreview = true;
             this.Name = "SimulatorForm";
             this.Text = "RoboWalk";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SimulatorForm_KeyDown);
             this.ResumeLayout(false);
 
         }

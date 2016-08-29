@@ -20,13 +20,13 @@ namespace RoboWalk.model
 {
     class Axis
     {
-        private double x { get; set; }
-        private double y { get; set; }
-        private double z { get; set; }
+        public double x { get; private set; }
+        public double y { get; private set; }
+        public double z { get; private set; }
 
-        private double r { get; set; }
-        private double p { get; set; }
-        private double yy { get; set; }
+        public double r { get; private set; }
+        public double p { get; private set; }
+        public double yy { get; private set; }
 
         public Axis() { }
         public Axis(double x, double y, double z,

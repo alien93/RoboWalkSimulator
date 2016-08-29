@@ -20,10 +20,10 @@ namespace RoboWalk.model
 {
     class Visual
     {
-        private string name { get; set; }
-        private Origin origin { get; set; }
-        private Geometry geometry { get; set; }
-        private Material material { get; set; }
+        public string name { get; set; }
+        public Origin origin { get; set; }
+        public Geometry geometry { get; set; }
+        public Material material { get; set; }
 
         public Visual() { }
         public Visual(string name, Origin origin, Geometry geometry, Material material)

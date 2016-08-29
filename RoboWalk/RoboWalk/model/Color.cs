@@ -20,10 +20,10 @@ namespace RoboWalk.model
 {
     class Color
     {
-        private double red { get; set; }
-        private double green { get; set; }
-        private double blue { get; set; }
-        private double alpha { get; set; }
+        public double red { get; set; }
+        public double green { get; set; }
+        public double blue { get; set; }
+        public double alpha { get; set; }
 
         public Color() { }
         public Color(double red, double green, double blue, double alpha)

@@ -20,9 +20,9 @@ namespace RoboWalk.model
 {
     class Material
     {
-        private string name { get; set; }
-        private Color color { get; set; }
-        private Texture texture { get; set; }
+        public string name { get; set; }
+        public Color color { get; set; }
+        public Texture texture { get; set; }
 
         public Material() { }
         public Material(string name, Color color, Texture texture)

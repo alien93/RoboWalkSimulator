@@ -22,16 +22,16 @@ namespace RoboWalk.model
     class Joint
     {
         public string name { get; set; } //name of the joint
-        private Types type { get; set; }
-        private Origin origin { get; set; }
-        private Parent parent { get; set; }
-        private Child child { get; set; }
-        private Axis axis { get; set; }
-        private Calibration calibration { get; set; }
-        private Dynamics dynamics { get; set; }
-        private Limit limit { get; set; }
-        private Mimic mimic { get; set; }
-        private SafetyController safetyController { get; set; }
+        public Types type { get; private set; }
+        public Origin origin { get; private set; }
+        public Parent parent { get; private set; }
+        public Child child { get; private set; }
+        public Axis axis { get; private set; }
+        public Calibration calibration { get; private set; }
+        public Dynamics dynamics { get; private set; }
+        public Limit limit { get; private set; }
+        public Mimic mimic { get; private set; }
+        public SafetyController safetyController { get; private set; }
 
         public Joint() { }
         public Joint(string name, Types type, Origin origin, Parent parent, Child child,

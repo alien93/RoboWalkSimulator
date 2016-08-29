@@ -20,7 +20,7 @@ namespace RoboWalk.model
 {
     class Parent
     {
-        private string link { get; set; } // The name of the link that is the parent of this link in the robot tree structure.
+        public string link { get; private set; } // The name of the link that is the parent of this link in the robot tree structure.
 
         public Parent() { }
         public Parent(string link)

@@ -25,13 +25,15 @@ namespace RoboWalk.urdf
     class URDFparser
     {
         private static URDFparser instance = null;
-        private static bool fileParsed { get; set; }
+        public bool fileParsed { get; private set; }
         public RobotModel rm  { get; set; }
+        public IDictionary<string, Link> usedLinks { get; set; }
 
         public URDFparser()
         {
             fileParsed = false;
             rm = new RobotModel();
+            usedLinks = new Dictionary<string, Link>();
         }
 
         public static URDFparser getInstance()
@@ -271,7 +273,7 @@ namespace RoboWalk.urdf
 
                 //inertial
                 Inertial inertial = null;
-                ArrayList visuals = new ArrayList();
+                List<Visual> visuals = new List<Visual>();
                
                 for (int j = 0; j < node.ChildNodes.Count; j++)
                 {

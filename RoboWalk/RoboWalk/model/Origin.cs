@@ -21,13 +21,13 @@ namespace RoboWalk.model
     class Origin
     {
         //xyz Represents the x, y, z offset.
-        private double x { get; set; }
-        private double y { get; set; }
-        private double z { get; set; }
+        public double x { get; set; }
+        public double y { get; set; }
+        public double z { get; set; }
 
-        private double r { get; set; }
-        private double p { get; set; }
-        private double yy { get; set; }
+        public double r { get; set; }
+        public double p { get; set; }
+        public double yy { get; set; }
 
         public Origin() { }
         public Origin(double x, double y, double z,

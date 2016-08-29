@@ -10,7 +10,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with RoboWalk.  If not, see <http://www.gnu.org/licenses/>*/
+using RoboWalk.model;
+using RoboWalk.urdf;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,12 +22,49 @@ using Tao.OpenGl;
 
 namespace RoboWalk.simulator
 {
-    class RobotSimulator:IDisposable
+    class RobotSimulator : IDisposable
     {
 
-        private float xRotation=0.0f;
+        private float xRotation = 0.0f;
         private float yRotation = -90.0f;
         private float sceneDistance=-50.0f;
+        private URDFparser urdf = null;
+        private IDictionary<string, float[]> matrices = new Dictionary<string, float[]>();    //matrix for each parent node
+        private string jointName = "";
+        private double limit = 0.1;
+        public float XRotation
+        {
+            get
+            {
+                return xRotation;
+            }
+            set
+            {
+                xRotation = value;
+            }
+        }
+        public float YRotation
+        {
+            get
+            {
+                return yRotation;
+            }
+            set
+            {
+                yRotation = value;
+            }
+        }
+        public float SceneDistance
+        {
+            get
+            {
+                return sceneDistance;
+            }
+            set
+            {
+                sceneDistance = value;
+            }
+        }
 
         public RobotSimulator()
         {
@@ -32,6 +72,7 @@ namespace RoboWalk.simulator
 
         public RobotSimulator(int width, int height)
         {
+            urdf = URDFparser.getInstance();
             this.init();
             this.resize(width, height);
         }
@@ -46,6 +87,7 @@ namespace RoboWalk.simulator
         {
             Gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             Gl.glEnable(Gl.GL_DEPTH_TEST);
+            Gl.glEnable(Gl.GL_COLOR_MATERIAL);
         }
 
         //setting viewport and projection for openGL control
@@ -75,11 +117,8 @@ namespace RoboWalk.simulator
             Gl.glPopMatrix();
             Gl.glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 
-
-           /* if(parser->getInstance()->getFileParsed())
-             {
-                 drawRobot();    //robot from urdf
-             }*/
+            if (urdf.fileParsed)
+                drawRobot();    //robot from urdf
         }
 
 
@@ -94,6 +133,146 @@ namespace RoboWalk.simulator
                 Gl.glVertex3f(i, 0.0f, -88.0f);
                 Gl.glVertex3f(i, 0.0f, 88.0f);
                 Gl.glEnd();
+            }
+        }
+
+        public void drawRobot()
+        {
+            IDictionary<string, Link> linksMap = urdf.rm.links;
+            List<Link> links = urdf.rm.linksVector;
+            IDictionary<string, Joint> jointsMap = urdf.rm.joints;
+            List<Joint> joints = urdf.rm.jointsVector;
+
+            float[] m = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+            //vector<Joint> joints = parser->getInstance()->rm.sortJoints(jointsMap);
+
+            if (joints.Count != 0)
+            {
+                foreach (Joint j in joints)
+                {
+                    Parent p = j.parent;   //parent
+                    Child c = j.child;     //child
+                    Origin o = j.origin;   //position of the child link relative to parent link
+                                                //draw parent link
+                                                //  glPushMatrix();
+                    Link lp = linksMap[p.link];
+                    IDictionary<string, Link> usedLinks = urdf.usedLinks;
+                    
+                    if(usedLinks.ContainsKey(lp.name))
+                    {
+                        Gl.glLoadMatrixf(matrices[lp.name]);
+                        drawLink(lp);
+                    }
+                    else
+                    {
+                        Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, m);
+                        matrices[lp.name] = m;
+                        usedLinks[lp.name] = lp;
+                        urdf.usedLinks = usedLinks;
+                        drawLink(lp);
+                    }
+                    //joint transformations
+                    if (jointName != "" && j.child.link == jointName)
+                    {
+                        Axis axis = j.axis;
+                        Gl.glTranslated(o.x, o.y, o.z);
+                        rotateMe(limit * (axis.x), limit * (axis.y), limit * (axis.z));
+                    }
+                    else
+                    {
+                        Gl.glTranslated(o.x, o.y, o.z);
+                        rotateMe(o.r, o.p, o.y);
+                    }
+
+
+                    //draw child link
+                    Link lc = linksMap[c.link];
+                    drawLink(lc);
+
+                }
+
+                IDictionary<string, Link> newMap = urdf.usedLinks;
+                newMap.Clear();
+                matrices.Clear();
+                urdf.usedLinks = newMap;
+            }
+            else
+                foreach(Link lp in links)
+                {
+                    Gl.glPushMatrix();
+                    drawLink(lp);
+                    Gl.glPopMatrix();
+                }
+        }
+
+        private void rotateMe(double r, double p, double y)
+        {
+            double angle = 0;
+            if (r != 0)
+            {
+                angle = convertRadToDegrees(r);
+                r = 1;
+            }
+            if (p != 0)
+            {
+                angle = convertRadToDegrees(p);
+                p = 1;
+            }
+            if (y != 0)
+            {
+                angle = convertRadToDegrees(y);
+                y = 1;
+            }
+            Gl.glRotated(angle, r, p, y);
+        }
+
+        private double convertRadToDegrees(double value)
+        {
+            return value * 180 / Math.PI;
+        }
+
+        private void drawLink(Link l)
+        {
+            List<Visual> visuals = l.visual;
+            
+            if(visuals.Count > 0)
+            {
+                for(int i=0; i<visuals.Count; i++)
+                {
+                    Origin o = visuals[i].origin;
+                    Geometry g = visuals[i].geometry;
+                    Material m = visuals[i].material;
+
+                    switch(g.abstractObject.name)
+                    {
+                        case "cylinder":
+                            {
+                                double length = g.abstractObject.length;
+                                double radius = g.abstractObject.radius;
+                                double red = m.color.red;
+                                double green = m.color.green;
+                                double blue = m.color.blue;
+                                double alpha = m.color.alpha;
+
+                                DrawCylinder cylinder = new DrawCylinder(length, radius,
+                                                                     o.r, o.p, o.yy,
+                                                                     o.x, o.y, o.z,
+                                                                     red, green, blue, alpha);
+                                cylinder.drawCylinder();
+
+                                break;
+                            }
+                        case "box":
+                            {
+                                break;
+                            }
+                        case "sphere":
+                            {
+                                break;
+                            }
+                    }
+                }
             }
         }
 

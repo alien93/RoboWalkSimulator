@@ -12,6 +12,7 @@ You should have received a copy of the GNU General Public License
 along with RoboWalk.  If not, see <http://www.gnu.org/licenses/>*/
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,12 +22,12 @@ namespace RoboWalk.model
     class Link
     {
         public string name { get; set; }
-        private Inertial inertial { get; set; }
-        private ArrayList visual { get; set; }
-        private Collision collision { get; set; }
+        public Inertial inertial { get; private set; }
+        public List<Visual> visual { get; private set; }
+        public Collision collision { get; private set; }
 
     public Link() { }
-        public Link(string name, Inertial inertial, ArrayList visual, Collision collision)
+        public Link(string name, Inertial inertial, List<Visual> visual, Collision collision)
         {
             this.name = name;
             this.inertial = inertial;

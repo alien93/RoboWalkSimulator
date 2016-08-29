@@ -20,7 +20,7 @@ namespace RoboWalk.model
 {
     class Geometry
     {
-        private AbstractObject abstractObject { get; set; }
+        public AbstractObject abstractObject { get; set; }
 
         public Geometry() { }
         public Geometry(AbstractObject ao)
