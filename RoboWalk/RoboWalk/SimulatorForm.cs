@@ -35,9 +35,7 @@ namespace RoboWalk
             InitializeComponent();
             robotSimulator.InitializeContexts();
             rs = new RobotSimulator(robotSimulator.Width, robotSimulator.Height);
-            URDFparser parser = URDFparser.getInstance();
             Console.WriteLine("starting...");
-            parser.parseURDF("D:/urdf/biped.urdf");
             Console.WriteLine("done...");
         }
 
@@ -97,6 +95,29 @@ namespace RoboWalk
                     }
             }
             robotSimulator.Refresh();
+        }
+
+        private void loadURDFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Create an instance of the open file dialog box.
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+
+            // Set filter options and filter index.
+            openFileDialog1.Filter = "URDF files (.urdf)|*.urdf";
+            openFileDialog1.FilterIndex = 1;
+
+            openFileDialog1.Multiselect = true;
+
+            // Call the ShowDialog method to show the dialog box.
+            DialogResult userClickedOK = openFileDialog1.ShowDialog();
+
+            // Process input if the user clicked OK.
+            if (userClickedOK == DialogResult.OK)
+            {
+                URDFparser parser = URDFparser.getInstance();
+
+                parser.parseURDF(openFileDialog1.FileName);
+            }
         }
     }
 }

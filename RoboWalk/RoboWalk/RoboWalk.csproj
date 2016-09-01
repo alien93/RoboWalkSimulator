@@ -122,7 +122,11 @@
     <Compile Include="model\Visual.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="simulator\Cuboid.cs" />
+    <Compile Include="simulator\DrawBox.cs" />
     <Compile Include="simulator\DrawCylinder.cs" />
+    <Compile Include="simulator\DrawHelper.cs" />
+    <Compile Include="simulator\DrawSphere.cs" />
     <Compile Include="simulator\RobotSimulator.cs" />
     <Compile Include="urdf\URDFparser.cs" />
     <EmbeddedResource Include="SimulatorForm.resx">

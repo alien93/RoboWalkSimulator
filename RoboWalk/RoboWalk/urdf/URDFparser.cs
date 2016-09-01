@@ -58,7 +58,7 @@ namespace RoboWalk.urdf
             Console.WriteLine(content);
 
             XmlNode root = document.FirstChild; //root element
-            string roboName = root.Attributes["name"]!=null?root.Attributes["name"].Value:"Undefined_Robot";
+            string roboName = root.Attributes !=null && root.Attributes["name"]!=null?root.Attributes["name"].Value:"Undefined_Robot";
             rm.name = roboName;
             for(int i=0; i<root.ChildNodes.Count; i++)
             {
@@ -290,170 +290,174 @@ namespace RoboWalk.urdf
                             }
                         case "visual":
                             {
-                                for (int k=0; k< node.ChildNodes.Count; k++)
+                                string visualName = "";
+                                Geometry geometry = null;
+                                Origin visualOrigin = null;
+                                Material material = null;
+
+                                for (int k = 0; k < node.ChildNodes.Count; k++)
                                 {
-                                    if(node.ChildNodes[k].Name.Equals("visual"))
+                                    if (node.ChildNodes[k].Name.Equals("visual"))
                                     {
-                                        for(int l=0; l<node.ChildNodes[k].ChildNodes.Count; l++)
+                                        for (int m = 0; m < node.ChildNodes[k].ChildNodes.Count; m++)
                                         {
-                                            XmlNode visualNode = node.ChildNodes[k].ChildNodes[l];
-                                            string visualName = visualNode.Attributes["name"] != null ? visualNode.Attributes["name"].Value : "";
+                                            XmlNode visualNode = node.ChildNodes[k].ChildNodes[m];
+                                            visualName = visualNode.Attributes["name"] != null ? visualNode.Attributes["name"].Value : "";
 
-                                            //origin
-                                            for(int m=0; m<visualNode.ChildNodes.Count; m++)
+                                           
+                                            switch (visualNode.Name.ToString())
                                             {
-                                                Geometry geometry = null;
-                                                switch (visualNode.ChildNodes[m].Name.ToString())
-                                                {
-                                                    case "origin":
+                                                case "origin":
+                                                    {
+                                                        XmlNode originNode = visualNode;
+                                                        string rpy = originNode.Attributes["rpy"] != null ? originNode.Attributes["rpy"].Value : "";
+                                                        string xyz = originNode.Attributes["xyz"] != null ? originNode.Attributes["xyz"].Value : "";
+                                                        double x, y, z, r, p, yy;
+                                                        if (xyz != "")
                                                         {
-                                                            XmlNode originNode = visualNode.ChildNodes[m];
-                                                            string rpy = originNode.Attributes["rpy"] != null ? originNode.Attributes["rpy"].Value : "";
-                                                            string xyz = originNode.Attributes["xyz"] != null ? originNode.Attributes["xyz"].Value : "";
-                                                            double x, y, z, r, p, yy;
-                                                            if (xyz != "")
-                                                            {
-                                                                string[] xyz_data = xyz.Split(' ');
-                                                                x = Convert.ToDouble(xyz_data[0]);
-                                                                y = Convert.ToDouble(xyz_data[1]);
-                                                                z = Convert.ToDouble(xyz_data[2]);
-                                                            }
-                                                            else
-                                                            {
-                                                                x = 0; y = 0; z = 0;
-                                                            }
-                                                            if (rpy != "")
-                                                            {
-                                                                string[] rpy_data = rpy.Split(' ');
-                                                                r = Convert.ToDouble(rpy_data[0]);
-                                                                p = Convert.ToDouble(rpy_data[1]);
-                                                                yy = Convert.ToDouble(rpy_data[2]);
-                                                            }
-                                                            else
-                                                            {
-                                                                r = 0; p = 0; yy = 0;
-                                                            }
-                                                            Origin visualOrigin = new Origin(x, y, z, r, p, yy);
-                                                            break;
+                                                            string[] xyz_data = xyz.Split(' ');
+                                                            x = Convert.ToDouble(xyz_data[0]);
+                                                            y = Convert.ToDouble(xyz_data[1]);
+                                                            z = Convert.ToDouble(xyz_data[2]);
                                                         }
-                                                    case "geometry":
+                                                        else
                                                         {
-                                                            XmlNode originNode = visualNode.ChildNodes[m];
-                                                            geometry = new Geometry();
-                                                            for (k=0; k<originNode.ChildNodes.Count; k++)
-                                                            {
-                                                                switch(originNode.ChildNodes[k].Name.ToString())
-                                                                {
-                                                                    case "box":
-                                                                        {
-                                                                            XmlNode boxNode = originNode.ChildNodes[k];
-                                                                            if(!boxNode.Name.Equals(""))
-                                                                            {
-                                                                                string sizeText = boxNode.Attributes["size"] != null ? boxNode.Attributes["size"].Value : "";
-                                                                                string[] sizeVal = sizeText.Split(' ');
-                                                                                double x_box = Convert.ToDouble(sizeVal[0]);
-                                                                                double y_box = Convert.ToDouble(sizeVal[1]);
-                                                                                double z_box = Convert.ToDouble(sizeVal[2]);
-                                                                                Box box = new Box(x_box, y_box, z_box);
-                                                                                box.name = "box";
-                                                                                geometry = new Geometry(box);
-                                                                            }
-                                                                            break;
-                                                                        }
-                                                                    case "cylinder":
-                                                                        {
-                                                                            XmlNode cylinderNode = originNode.ChildNodes[k];
-                                                                            if(!cylinderNode.Name.Equals(""))
-                                                                            {
-                                                                                string radiusText = cylinderNode.Attributes["radius"] != null ? cylinderNode.Attributes["radius"].Value : "";
-                                                                                string lengthText = cylinderNode.Attributes["length"] != null ? cylinderNode.Attributes["length"].Value : "";
-                                                                                double radius = Convert.ToDouble(radiusText);
-                                                                                double length = Convert.ToDouble(lengthText);
-                                                                                Cylinder cylinder = new Cylinder(radius, length);
-                                                                                cylinder.name = "cylinder";
-                                                                                geometry = new Geometry(cylinder);
-                                                                            }
-                                                                            break;
-                                                                        }
-                                                                    case "sphere":
-                                                                        {
-                                                                            XmlNode sphereNode = originNode.ChildNodes[k];
-                                                                            if(!sphereNode.Name.Equals(""))
-                                                                            {
-                                                                                string radiusText = sphereNode.Attributes["radius"] != null ? sphereNode.Attributes["radius"].Value : "";
-                                                                                double radius = Convert.ToDouble(radiusText);
-                                                                                Sphere sphere = new Sphere(radius);
-                                                                                sphere.name = "sphere";
-                                                                                geometry = new Geometry(sphere);
-                                                                            }
-                                                                            break;
-                                                                        }
-                                                                    default:
-                                                                        {
-                                                                            break;
-                                                                        }
-                                                                }
-                                                            }
-                                                            break;
+                                                            x = 0; y = 0; z = 0;
                                                         }
-                                                    case "material":
+                                                        if (rpy != "")
                                                         {
-                                                            XmlNode materialNode = visualNode.ChildNodes[m];
-                                                            string materialName = materialNode.Attributes["name"] != null ? materialNode.Attributes["name"].Value : "";
-                                                            Color color = null;  Texture texture = null;
+                                                            string[] rpy_data = rpy.Split(' ');
+                                                            r = Convert.ToDouble(rpy_data[0]);
+                                                            p = Convert.ToDouble(rpy_data[1]);
+                                                            yy = Convert.ToDouble(rpy_data[2]);
+                                                        }
+                                                        else
+                                                        {
+                                                            r = 0; p = 0; yy = 0;
+                                                        }
+                                                        visualOrigin = new Origin(x, y, z, r, p, yy);
+                                                        break;
+                                                    }
+                                                case "geometry":
+                                                    {
+                                                        XmlNode originNode = visualNode;
+                                                        geometry = new Geometry();
+                                                        for (int l = 0; l < originNode.ChildNodes.Count; l++)
+                                                        {
+                                                            switch (originNode.ChildNodes[l].Name.ToString())
+                                                            {
+                                                                case "box":
+                                                                    {
+                                                                        XmlNode boxNode = originNode.ChildNodes[l];
+                                                                        if (!boxNode.Name.Equals(""))
+                                                                        {
+                                                                            string sizeText = boxNode.Attributes["size"] != null ? boxNode.Attributes["size"].Value : "";
+                                                                            string[] sizeVal = sizeText.Split(' ');
+                                                                            double x_box = Convert.ToDouble(sizeVal[0]);
+                                                                            double y_box = Convert.ToDouble(sizeVal[1]);
+                                                                            double z_box = Convert.ToDouble(sizeVal[2]);
+                                                                            Box box = new Box(x_box, y_box, z_box);
+                                                                            box.name = "box";
+                                                                            geometry = new Geometry(box);
+                                                                        }
+                                                                        break;
+                                                                    }
+                                                                case "cylinder":
+                                                                    {
+                                                                        XmlNode cylinderNode = originNode.ChildNodes[l];
+                                                                        if (!cylinderNode.Name.Equals(""))
+                                                                        {
+                                                                            string radiusText = cylinderNode.Attributes["radius"] != null ? cylinderNode.Attributes["radius"].Value : "";
+                                                                            string lengthText = cylinderNode.Attributes["length"] != null ? cylinderNode.Attributes["length"].Value : "";
+                                                                            double radius = Convert.ToDouble(radiusText);
+                                                                            double length = Convert.ToDouble(lengthText);
+                                                                            Cylinder cylinder = new Cylinder(radius, length);
+                                                                            cylinder.name = "cylinder";
+                                                                            geometry = new Geometry(cylinder);
+                                                                        }
+                                                                        break;
+                                                                    }
+                                                                case "sphere":
+                                                                    {
+                                                                        XmlNode sphereNode = originNode.ChildNodes[l];
+                                                                        if (!sphereNode.Name.Equals(""))
+                                                                        {
+                                                                            string radiusText = sphereNode.Attributes["radius"] != null ? sphereNode.Attributes["radius"].Value : "";
+                                                                            double radius = Convert.ToDouble(radiusText);
+                                                                            Sphere sphere = new Sphere(radius);
+                                                                            sphere.name = "sphere";
+                                                                            geometry = new Geometry(sphere);
+                                                                        }
+                                                                        break;
+                                                                    }
+                                                                default:
+                                                                    {
+                                                                        break;
+                                                                    }
+                                                            }
+                                                        }
+                                                        break;
+                                                    }
+                                                case "material":
+                                                    {
+                                                        XmlNode materialNode = visualNode;
+                                                        string materialName = materialNode.Attributes["name"] != null ? materialNode.Attributes["name"].Value : "";
+                                                        Color color = null; Texture texture = null;
 
-                                                            for(int z = 0; z<materialNode.ChildNodes.Count; z++)
-                                                            {
-                                                                switch(materialNode.ChildNodes[z].Name)
-                                                                {
-                                                                    case "color":
-                                                                        {
-                                                                            XmlNode colorNode = materialNode.ChildNodes[z];
-                                                                            string colorText = colorNode.Attributes["rgba"] != null ? colorNode.Attributes["rgba"].Value : "";
-                                                                            double rColor, gColor, bColor, aColor;
-                                                                            if(!colorText.Equals(""))
-                                                                            {
-                                                                                string[] rgbaList = colorText.Split(' ');
-                                                                                rColor = Convert.ToDouble(rgbaList[0]);
-                                                                                gColor = Convert.ToDouble(rgbaList[1]);
-                                                                                bColor = Convert.ToDouble(rgbaList[2]);
-                                                                                aColor = Convert.ToDouble(rgbaList[3]);
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                rColor = 0; gColor = 0; bColor = 0; aColor = 0;
-                                                                            }
-                                                                            color = new Color(rColor, gColor, bColor, aColor);
-                                                                            break;
-                                                                        }
-                                                                    case "texture":
-                                                                        {
-                                                                            texture = new Texture();
-                                                                            break;
-                                                                        }
-                                                                    default:
-                                                                        {
-                                                                            break;
-                                                                        }
-                                                                }
-                                                                Material material = new Material(materialName, color, texture);
-                                                                Visual visual = new Visual(visualName, origin, geometry, material);
-                                                                visuals[visuals.Count] = visual;
-                                                            }
-
-                                                            break;
-                                                        }
-                                                    default:
+                                                        for (int z = 0; z < materialNode.ChildNodes.Count; z++)
                                                         {
-                                                            break;
+                                                            switch (materialNode.ChildNodes[z].Name)
+                                                            {
+                                                                case "color":
+                                                                    {
+                                                                        XmlNode colorNode = materialNode.ChildNodes[z];
+                                                                        string colorText = colorNode.Attributes["rgba"] != null ? colorNode.Attributes["rgba"].Value : "";
+                                                                        double rColor, gColor, bColor, aColor;
+                                                                        if (!colorText.Equals(""))
+                                                                        {
+                                                                            string[] rgbaList = colorText.Split(' ');
+                                                                            rColor = Convert.ToDouble(rgbaList[0]);
+                                                                            gColor = Convert.ToDouble(rgbaList[1]);
+                                                                            bColor = Convert.ToDouble(rgbaList[2]);
+                                                                            aColor = Convert.ToDouble(rgbaList[3]);
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            rColor = 0; gColor = 0; bColor = 0; aColor = 0;
+                                                                        }
+                                                                        color = new Color(rColor, gColor, bColor, aColor);
+                                                                        break;
+                                                                    }
+                                                                case "texture":
+                                                                    {
+                                                                        texture = new Texture();
+                                                                        break;
+                                                                    }
+                                                                default:
+                                                                    {
+                                                                        break;
+                                                                    }
+                                                            }
+                                                            material = new Material(materialName, color, texture);
+
                                                         }
-                                                
-                                                }
+
+                                                        break;
+                                                    }
+                                                default:
+                                                    {
+                                                        break;
+                                                    }
+
+
                                             }
-
+                                            
                                         }
+
                                     }
                                 }
+                                Visual visual = new Visual(visualName, visualOrigin, geometry, material);
+                                visuals.Add(visual);
                                 break;
                             }
                         default:

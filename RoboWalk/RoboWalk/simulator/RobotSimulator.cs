@@ -250,10 +250,17 @@ namespace RoboWalk.simulator
                             {
                                 double length = g.abstractObject.length;
                                 double radius = g.abstractObject.radius;
-                                double red = m.color.red;
-                                double green = m.color.green;
-                                double blue = m.color.blue;
-                                double alpha = m.color.alpha;
+                                double red = 0;
+                                double green = 0;
+                                double blue = 0;
+                                double alpha = 1;
+                                if (m != null && m.color != null)
+                                {
+                                    red = m.color.red;
+                                    green = m.color.green;
+                                    blue = m.color.blue;
+                                    alpha = m.color.alpha;
+                                }
 
                                 DrawCylinder cylinder = new DrawCylinder(length, radius,
                                                                      o.r, o.p, o.yy,
@@ -265,10 +272,47 @@ namespace RoboWalk.simulator
                             }
                         case "box":
                             {
+                                double width = g.abstractObject.width;
+                                double height = g.abstractObject.height;
+                                double depth = g.abstractObject.depth;
+                                double red = 0;
+                                double green = 0;
+                                double blue = 0;
+                                double alpha = 1;
+                                if(m != null && m.color != null)
+                                {
+                                    red = m.color.red;
+                                    green = m.color.green;
+                                    blue = m.color.blue;
+                                    alpha = m.color.alpha;
+                                }
+                               
+                                DrawBox box = new DrawBox(width, height, depth,
+                                                          o.r, o.p, o.yy,
+                                                          o.x, o.y, o.z,
+                                                          red, green, blue, alpha);
+                                box.drawBox();
                                 break;
                             }
                         case "sphere":
                             {
+                                double radius = g.abstractObject.radius;
+                                double red = 0;
+                                double green = 0;
+                                double blue = 0;
+                                double alpha = 1;
+                                if (m != null && m.color != null)
+                                {
+                                    red = m.color.red;
+                                    green = m.color.green;
+                                    blue = m.color.blue;
+                                    alpha = m.color.alpha;
+                                }
+                                DrawSphere sphere = new DrawSphere(radius,
+                                                                   o.r, o.p, o.yy,
+                                                                   o.x, o.y, o.z,
+                                                                   red, green, blue, alpha);
+                                sphere.drawSphere();
                                 break;
                             }
                     }
