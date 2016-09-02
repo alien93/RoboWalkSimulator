@@ -45,19 +45,13 @@ namespace RoboWalk.urdf
             return instance;
         }
 
-        /*public void addInertialElementChildren(int i, XmlElement inertialElement, Inertial inertial)
-        {
-            if(inertialElement.ChildNodes[i].ta)
-        }*/
-
         public void parseURDF(string filename)
         {
             XmlDocument document = new XmlDocument();
             document.Load(filename);
             string content = document.InnerXml;
-            Console.WriteLine(content);
 
-            XmlNode root = document.FirstChild; //root element
+            XmlNode root = document.GetElementsByTagName("robot")[0]; //root element
             string roboName = root.Attributes !=null && root.Attributes["name"]!=null?root.Attributes["name"].Value:"Undefined_Robot";
             rm.name = roboName;
             for(int i=0; i<root.ChildNodes.Count; i++)

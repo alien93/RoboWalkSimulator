@@ -138,14 +138,14 @@ namespace RoboWalk.simulator
 
         public void drawRobot()
         {
-            IDictionary<string, Link> linksMap = urdf.rm.links;
-            List<Link> links = urdf.rm.linksVector;
-            IDictionary<string, Joint> jointsMap = urdf.rm.joints;
-            List<Joint> joints = urdf.rm.jointsVector;
+            IDictionary<string, Link> linksMap = URDFparser.getInstance().rm.links;
+            List<Link> links = URDFparser.getInstance().rm.linksVector;
+            IDictionary<string, Joint> jointsMap = URDFparser.getInstance().rm.joints;
+            //List<Joint> joints = URDFparser.getInstance().rm.sortJoints(jointsMap);
+            List<Joint> joints = URDFparser.getInstance().rm.jointsVector;
 
-            float[] m = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+            float[] m = new float[16];
 
-            //vector<Joint> joints = parser->getInstance()->rm.sortJoints(jointsMap);
 
             if (joints.Count != 0)
             {
@@ -154,24 +154,25 @@ namespace RoboWalk.simulator
                     Parent p = j.parent;   //parent
                     Child c = j.child;     //child
                     Origin o = j.origin;   //position of the child link relative to parent link
-                                                //draw parent link
-                                                //  glPushMatrix();
+
                     Link lp = linksMap[p.link];
-                    IDictionary<string, Link> usedLinks = urdf.usedLinks;
+                    IDictionary<string, Link> usedLinks = URDFparser.getInstance().usedLinks;
                     
+                    //draw parent link
                     if(usedLinks.ContainsKey(lp.name))
                     {
+                        //the link already exists
                         Gl.glLoadMatrixf(matrices[lp.name]);
-                        drawLink(lp);
                     }
                     else
                     {
                         Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, m);
-                        matrices[lp.name] = m;
-                        usedLinks[lp.name] = lp;
-                        urdf.usedLinks = usedLinks;
+                        matrices.Add(lp.name, m);
+                        usedLinks.Add(lp.name, lp);
+                        URDFparser.getInstance().usedLinks = usedLinks;
                         drawLink(lp);
                     }
+
                     //joint transformations
                     if (jointName != "" && j.child.link == jointName)
                     {
@@ -181,8 +182,8 @@ namespace RoboWalk.simulator
                     }
                     else
                     {
+                        rotateMe(o.r, o.p, o.yy);
                         Gl.glTranslated(o.x, o.y, o.z);
-                        rotateMe(o.r, o.p, o.y);
                     }
 
 
@@ -192,10 +193,10 @@ namespace RoboWalk.simulator
 
                 }
 
-                IDictionary<string, Link> newMap = urdf.usedLinks;
+                IDictionary<string, Link> newMap = URDFparser.getInstance().usedLinks;
                 newMap.Clear();
                 matrices.Clear();
-                urdf.usedLinks = newMap;
+                URDFparser.getInstance().usedLinks = newMap;
             }
             else
                 foreach(Link lp in links)

@@ -22,7 +22,7 @@ namespace RoboWalk.model
     {
         public Sphere() { }
         public Sphere(AbstractObject ao) : base(ao) { }
-        public Sphere(double radious)
+        public Sphere(double radius)
         {
             this.radius = radius;
         }

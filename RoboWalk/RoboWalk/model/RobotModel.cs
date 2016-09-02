@@ -54,5 +54,41 @@ namespace RoboWalk.model
             links.Add(link.name, link);
             linksVector.Insert(linksVector.Count, link);
         }
+
+        internal List<Joint> sortJoints(IDictionary<string, Joint> jointsMap)
+        {
+            List<Joint> retVal = new List<Joint>();
+
+            List<String> parentNodes = new List<String>();
+            parentNodes.Add("base_link");
+
+            foreach(Joint joint in joints.Values)
+            {
+                string parent = parentNodes.Last();
+                if(joint.parent.link == parent)
+                {
+                    createBranch(ref retVal, joints, joint.name);
+                }
+
+            }
+
+            return retVal;
+        }
+
+        private void createBranch(ref List<Joint> retVal, IDictionary<string, Joint> joints, string name)
+        {
+            List<string> childNodes = new List<string>();
+            childNodes.Add(joints[name].child.link);
+            retVal.Add(joints[name]);
+            string parentNode = childNodes.Last();
+
+            foreach(Joint joint in joints.Values)
+            {
+                if(joint.parent.link == parentNode)
+                {
+                    createBranch(ref retVal, joints, joint.name);
+                }
+            }
+        }
     }
 }

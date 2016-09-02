@@ -86,6 +86,8 @@ namespace RoboWalk.simulator
                 angle = convertRadToDegrees(y);
                 y = 1;
             }
+            if (r + p + y > 1)
+                Gl.glRotated(angle, r, p, y);
             Gl.glRotated(angle, r, p, y);
             Gl.glTranslated(0.0, 0.0, -length / 2);
         }
